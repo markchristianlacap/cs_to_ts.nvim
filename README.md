@@ -45,13 +45,13 @@ return {
 
 ```lua
 -- Use the plugin
-local cs_to_ts_converter = require('cs_to_ts_interface_converter')
+local  converter= require('cs_to_ts_interface_converter')
 
 -- Get the selected text in visual mode
-local selectedText = getVisualSelection()
+local selectedText = converter.getVisualSelection()
 
 -- Convert the selected text to TypeScript interface
-local tsInterface, error = cs_to_ts_converter.convertToTypeScriptInterface(selectedText)
+local tsInterface, error = converter.convertToTypeScriptInterface(selectedText)
 
 -- Handle the result
 if not tsInterface then
