@@ -1,6 +1,6 @@
-# cs_to_ts_interface_converter
+# cs_to_ts_converter
 
-A Neovim plugin for converting selected C# class to TypeScript interface, with the ability to import and use as a Lua module.
+A Neovim plugin for converting selected C# class to TypeScript interface or enum, with the ability to import and use as a Lua module.
 
 ## Installation and Usage
 
