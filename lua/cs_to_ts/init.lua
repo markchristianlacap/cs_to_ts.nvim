@@ -2,7 +2,7 @@ local enumConverter = require("cs_to_ts.enum")
 local classConverter = require("cs_to_ts.class")
 local M = {}
 
-function M.convertToTS(csharpCode)
+function M.convertToTSInterface(csharpCode)
 	local tsCode = ""
 	local className = csharpCode:match("class%s+(%w+)")
 	local enumName = csharpCode:match("enum%s+(%w+)")
