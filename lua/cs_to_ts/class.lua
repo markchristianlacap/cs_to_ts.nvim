@@ -28,7 +28,7 @@ local function mapType(csharpType)
 		["DateOnly"] = "Date",
 		-- Add more types as needed
 	}
-	return typeMap[csharpType] or "any"
+	return typeMap[csharpType] or csharpType
 end
 
 -- Function to parse a C# class definition
@@ -44,7 +44,8 @@ local function parseCSharpClass(csharpClass)
 			className = string.match(line, "public class (%w+)")
 		elseif string.find(line, "^public") then
 			local isMethod = string.find(line, "%(")
-			if not isMethod then
+			local isReadOnlyProp = string.find(line, "=>")
+			if not isMethod or isReadOnlyProp then
 				local propType, propName = string.match(line, "public (%w+) (%w+)")
 				properties[#properties + 1] = { name = camelCase(propName), propType = mapType(propType) }
 			end
