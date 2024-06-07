@@ -2,7 +2,7 @@ local enumConverter = require("cs_to_ts.enum")
 local classConverter = require("cs_to_ts.class")
 local M = {}
 
-function M.convertToTSInterface(csharpCode)
+function M.convert(csharpCode)
 	local tsCode = ""
 	local className = csharpCode:match("class%s+(%w+)")
 	local enumName = csharpCode:match("enum%s+(%w+)")
@@ -16,15 +16,6 @@ function M.convertToTSInterface(csharpCode)
 	end
 
 	return tsCode
-end
-
-function M.getVisualSelection()
-	local orig_reg = vim.fn.getreg('"')
-	local orig_regtype = vim.fn.getregtype('"')
-	vim.cmd('normal! ""gv"')
-	local selected_text = vim.fn.getreg('"')
-	vim.fn.setreg('"', orig_reg, orig_regtype)
-	return selected_text
 end
 
 function M.getSelectedText()
