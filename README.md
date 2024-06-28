@@ -1,6 +1,6 @@
-# cs_to_ts_converter
+# C# to TypeScript interface converter using Lua 
 
-A Neovim plugin for converting selected C# class to TypeScript interface or enum, with the ability to import and use as a Lua module.
+A Neovim helper for converting C# class to TypeScript interface with the ability to import and use as a Lua module.
 
 ## Installation and Usage
 
@@ -11,53 +11,23 @@ A Neovim plugin for converting selected C# class to TypeScript interface or enum
 
 ```lua
 return {
-  {
-    "markchristianlacap/cs_to_ts.nvim",
-    keys = {
-      {
-        "<leader>lt",
-        function()
-          -- Use the plugin
-          local converter = require "cs_to_ts"
-
-          -- get text from clipboard
-          local clipboard = vim.fn.getreg "+"
-
-          -- Convert the text to TypeScript
-          local ts, error = converter.convert(clipboard)
-
-          -- Handle the result
-          if ts then
-            vim.fn.setreg("+", ts) -- Copy to system clipboard
-          else
-            print("Error:", error)
-          end
-        end,
-        desc = "Convert C# class from clipboard to TypeScript.",
-        mode = { "n" },
-      },
-      {
-        "<leader>lt",
-        function()
-          -- Use the plugin
-          local converter = require "cs_to_ts"
-
-          -- Get the selected text in visual mode
-          local selectedText = converter.getSelectedText()
-          print("selected:", selectedText)
-          -- Convert the selected text to TypeScript
-          local ts, error = converter.convert(selectedText)
-
-          -- Handle the result
-          if ts then
-            vim.fn.setreg("+", ts) -- Copy to system clipboard
-          else
-            print("Error:", error)
-          end
-        end,
-        desc = "Convert C# class from selected to TypeScript.",
-        mode = { "v" },
-      },
+  'markchristianlacap/cs-to-ts.nvim',
+  ft = 'cs',
+  keys = {
+    {
+      '<leader>lc',
+      mode = { 'v', 'n' },
+      function()
+        --get yanked text
+        local text = vim.fn.getreg '"'
+        -- convert
+        local interface = require('cs-to-ts').convert(text)
+        if interface then
+          --put to vim register
+          vim.fn.setreg('"', interface)
+        end
+      end,
+      desc = 'Convert yanked C# to TypeScript interface',
     },
   },
 }
