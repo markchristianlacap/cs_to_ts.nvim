@@ -14,9 +14,13 @@ local function split(str, delim)
 	end)
 	return result
 end
+function hasNullable(csharpType)
+	return string.find(csharpType, "%?$") ~= nil
+end
 
 -- Function to map C# types to TypeScript types
 local function mapType(csharpType)
+	csharpType = csharpType:gsub("%?$", "")
 	local typeMap = {
 		["int"] = "number",
 		["float"] = "number",
@@ -47,7 +51,13 @@ local function parseCSharpClass(csharpClass)
 			local isReadOnlyProp = string.find(line, "=>")
 			if not isMethod or isReadOnlyProp then
 				local propType, propName = string.match(line, "public (%w+) (%w+)")
-				properties[#properties + 1] = { name = camelCase(propName), propType = mapType(propType) }
+				propName = camelCase(propName)
+				local isNullable = hasNullable(propType)
+				propType = mapType(propType)
+				if isNullable then
+					propName = propName .. "?"
+				end
+				properties[#properties + 1] = { name = propName, propType = propType, isNullable = isNullable }
 			end
 		end
 	end
@@ -60,7 +70,11 @@ local function generateTSInterface(className, properties)
 	local tsInterface = "export interface " .. className .. " {\n"
 
 	for _, prop in ipairs(properties) do
-		tsInterface = tsInterface .. "    " .. prop.name .. ": " .. prop.propType .. ";\n"
+		local propType = prop.propType
+		if prop.isNullable then
+			propType = propType .. " | null"
+		end
+		tsInterface = tsInterface .. "    " .. prop.name .. ": " .. propType .. ";\n"
 	end
 
 	tsInterface = tsInterface .. "}\n"
